@@ -1,20 +1,16 @@
 package com.dxc.controller;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.services.translate.AmazonTranslate;
-import com.amazonaws.services.translate.AmazonTranslateClient;
-import com.amazonaws.services.translate.model.TranslateTextRequest;
-import com.amazonaws.services.translate.model.TranslateTextResult;
-
-import java.nio.charset.StandardCharsets;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -33,32 +29,13 @@ public class HomeController {
 		return mv;
 	}
 
-	@PostMapping("/upload")
+	@PostMapping("/upload1")
 	@ResponseBody
-	public byte[] analyzing(@RequestBody String input) {
+	public String analyzing(@RequestBody String input) {
+		if(isNullOrEmpty(input)) return "";
 		
-		if(isNullOrEmpty(input)) return null;
-		
-		AWSCredentialsProvider awsCreds = DefaultAWSCredentialsProviderChain.getInstance();
-        
-        AmazonTranslate translate = AmazonTranslateClient.builder()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds.getCredentials()))
-                //.withRegion(DefaultAwsRegionProviderChain.class.getName())
-                .build();
- 
-        TranslateTextRequest request = new TranslateTextRequest()
-                .withText(input)
-                .withSourceLanguageCode("en")
-                .withTargetLanguageCode("vi");
-        TranslateTextResult result  = translate.translateText(request);
-        
-        String res = result.getTranslatedText();
-        
-        System.out.println(res);
-        
-        byte[] b = res.getBytes(StandardCharsets.UTF_8);
-        
-		return b;
+		return "";
 	}
-
+	
 }
+
