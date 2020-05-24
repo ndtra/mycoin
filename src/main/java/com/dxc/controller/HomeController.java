@@ -1,10 +1,10 @@
 package com.dxc.controller;
 
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.nio.charset.StandardCharsets;
+import java.security.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,21 +55,40 @@ public class HomeController {
 		ModelAndView mv = new ModelAndView("home");
 		return mv;
 	}
+	
+	@GetMapping("/admin")
+	public String admin() {
+		return "admin";
+	}
 
 	@PostMapping("/setting")
-	public String settingWallet() {
-		mainWallet = new Wallet();
-		Wallet coinbase = new Wallet();
-		// create genesis transaction, which sends 100 NoobCoin to walletA:
-		genesisTransaction = new Transaction(coinbase.publicKey, mainWallet.publicKey, 100000f, null);
-		genesisTransaction.generateSignature(coinbase.privateKey); // manually sign the genesis transaction
-		genesisTransaction.transactionId = "0"; // manually set the transaction id
-		genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); // manually add the Transactions Output
-		UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0)); // its important to store our first transaction in the UTXOs list.
-		Block genesis = new Block("0");
-		genesis.addTransaction(genesisTransaction);
-		addBlock(genesis);
-		return "";
+	@ResponseBody
+	public byte[] settingWallet() {
+		try {
+			if(blockchain.size()==0) {
+				mainWallet = new Wallet();
+				Wallet coinbase = new Wallet();
+				// create genesis transaction, which sends 100 NoobCoin to walletA:
+				genesisTransaction = new Transaction(coinbase.publicKey, mainWallet.publicKey, 100000f, null);
+				genesisTransaction.generateSignature(coinbase.privateKey); // manually sign the genesis transaction
+				genesisTransaction.transactionId = "0"; // manually set the transaction id
+				genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); // manually add the Transactions Output
+				UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0)); // its important to store our first transaction in the UTXOs list.
+				Block genesis = new Block("0");
+				genesis.addTransaction(genesisTransaction);
+				addBlock(genesis);
+				
+				return "Tạo ví thành công".getBytes(StandardCharsets.UTF_8);
+			}
+			else {
+				return "Ví đã được tạo".getBytes(StandardCharsets.UTF_8);
+			}
+			
+		}
+		catch (Exception e) {
+			return "Tạo ví thất bại".getBytes(StandardCharsets.UTF_8);
+			// TODO: handle exception
+		}
 	}
 
 	@PostMapping("/create-wallet")

@@ -33,29 +33,30 @@
 	type="text/javascript"></script>
 
 </head>
+<div class="container">
 <div class="content-header row">
 	<div class="content-header-left col-md-6 col-xs-12 mb-1">
-		<h2 class="content-header-title">Amazon Translate</h2>
+		<h2 class="content-header-title">MYCOIN</h2>
 	</div>
 </div>
 
 <div class="row">
 	<div class="col-xs-12">
 		<div class="input-group">
-			<textarea class="form-control" aria-label="With textarea" name="input" id="input"></textarea>
-			<br><br>
-			<button type="button" id="translate">Translate</button>
-			<button type="reset" id="reset">Reset</button>
+			<button type="button" id="create">Tạo ví</button>
+			<button type="button" id="send">Gửi coin</button>
+			<button type="button" id="balance">Xem số dư</button>
+			<button type="button" id="history">Lịch sử giao dịch</button>
 		</div>
 	</div>
 </div>
 <br>
 <div class="row">
 	<div class="col-xs-12">
-		<div class="input-group">
-				<textarea class="form-control" aria-label="With textarea" name="result" id="result" disabled="disabled"></textarea>
+		<div class="input-group" id="result">
 		</div>
 	</div>
+</div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
