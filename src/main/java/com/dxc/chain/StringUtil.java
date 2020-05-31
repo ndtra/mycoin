@@ -81,4 +81,14 @@ public class StringUtil {
 		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
 		return merkleRoot;
 	}
+	public static boolean comparrKey(String a,String b) {
+		if(a.substring(a.indexOf('['), a.indexOf(']')).equals(b.substring(b.indexOf('['), b.indexOf(']')))) {
+			if(a.substring(a.indexOf("X:"),a.indexOf("Y:")).trim().equals(b.substring(b.indexOf("X:"),b.indexOf("Y:")).trim())){
+				if(a.substring(a.indexOf("Y:"),a.length()-1).equals(b.substring(b.indexOf("Y:"),b.length()-1))){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

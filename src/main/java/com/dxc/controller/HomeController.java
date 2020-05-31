@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dxc.chain.Block;
 import com.dxc.chain.SecuritySetting;
+import com.dxc.chain.StringUtil;
 import com.dxc.chain.Transaction;
 import com.dxc.chain.TransactionConvert;
 import com.dxc.chain.TransactionInput;
@@ -32,7 +33,7 @@ public class HomeController {
 	public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String, TransactionOutput>();
 	public static List<Wallet> wallets = new ArrayList<Wallet>();
 	List<TransactionConvert> result = new ArrayList<TransactionConvert>();
-	int index=0;
+	int index=1;
 
 	public static int difficulty = 3;
 	public static float minimumTransaction = 0.1f;
@@ -101,7 +102,7 @@ public class HomeController {
 				Block genesis = new Block("0");
 				genesis.addTransaction(genesisTransaction);
 				addBlock(genesis);
-				
+				wallets.add(mainWallet);
 				return "Tạo ví thành công".getBytes(StandardCharsets.UTF_8);
 			}
 			else {
@@ -114,47 +115,58 @@ public class HomeController {
 			// TODO: handle exception
 		}
 	}
+	
+	@GetMapping("/create-wallet")
+	public String createWallet() {
+		return "new_wallet";
+	}
 
 	@PostMapping("/create-wallet")
 	@ResponseBody
-	public String analyzing(@RequestBody String input) {
-		newWallet = new Wallet();
-		Block block = new Block(blockchain.get(blockchain.size() - 1).hash);
-		block.addTransaction(wallets.get(0).sendFunds(newWallet.publicKey, 100f));
-		addBlock(block);
-
-		wallets.add(newWallet);
+	public byte[] saveWallet() {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		try {
+			newWallet = new Wallet();
+			Block block = new Block(blockchain.get(blockchain.size() - 1).hash);
+			block.addTransaction(wallets.get(0).sendFunds(newWallet.publicKey, 100f));
+			addBlock(block);
+			wallets.add(newWallet);
+			return "Tạo ví thành công".getBytes(StandardCharsets.UTF_8);
+		}
+		catch (Exception e) {
+			return "Tạo ví thất bại".getBytes(StandardCharsets.UTF_8);
+			// TODO: handle exception
+		}
 		
-		return "";
 	}
 	
-	@PostMapping("/balance")
+	@PostMapping("/get-balance")
 	@ResponseBody
-	public String balance(@RequestBody String publicKey) {
+	public float balance(@RequestBody String privateKey) {
 		if (wallets.size() > 0) {
 			for (int i = 0; i < wallets.size(); i++) {
-				if(wallets.get(i).publicKey.equals(publicKey))
-				return wallets.get(i).getBalance()+"";
+				if(StringUtil.comparrKey(wallets.get(i).privateKey.toString().trim(),privateKey.trim()))
+					return wallets.get(i).getBalance();
 			}
 		}
 		
-		return "";
+		return 0;
 	}
 	
 	@PostMapping("/send-coin")
 	@ResponseBody
-	public String sendCoin(@RequestBody String from, String to, float value) {
+	public String sendCoin(@RequestBody String from,@RequestBody String to,@RequestBody String value) {
 		Wallet fromWallet = new Wallet();;
 		Wallet toWallet = new Wallet();
 		int flag=0;
 		if (wallets.size() > 0) {
 			for (int i = 0; i < wallets.size(); i++) {
-				if(wallets.get(i).publicKey.equals(from)) {
+				if(wallets.get(i).privateKey.toString().equals(from)) {
 					fromWallet = wallets.get(i);
 					flag++;
 					if(flag==2) break;
 				}
-				else if(wallets.get(i).publicKey.equals(to)) {
+				else if(wallets.get(i).publicKey.toString().equals(to)) {
 					toWallet = wallets.get(i);
 					flag++;
 					if(flag==2) break;
@@ -162,25 +174,8 @@ public class HomeController {
 			}
 		}
 		Block block1 = new Block(blockchain.get(blockchain.size()-1).hash);
-		block1.addTransaction(fromWallet.sendFunds(toWallet.publicKey, value));
+		block1.addTransaction(fromWallet.sendFunds(toWallet.publicKey, Float.parseFloat(value)));
 		addBlock(block1);
-		return "";
-	}
-	
-	@PostMapping("/transaction-histories")
-	@ResponseBody
-	public String transactionHistories(@RequestBody String input) {
-		if (blockchain.size() > 0) {
-			for (int i = 0; i < blockchain.size(); i++) {
-				System.out.println("block " + i + ":");
-				List<Transaction> transBlock = blockchain.get(i).transactions;
-				if (transBlock.size() > 0) {
-					System.out.println(transBlock.get(0).toString());
-				} else {
-					System.out.println("Block " + i + " have no transaction");
-				}
-			}
-		}
 		return "";
 	}
 	
@@ -259,6 +254,7 @@ public class HomeController {
 				
 			}
 		}
+		System.out.println("thahahahahaahaha:"+walletA.privateKey.toString().equals(walletA.privateKey.toString()));
 	}
 	
 
