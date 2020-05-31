@@ -31,13 +31,10 @@ public class Chain {
 		
 		genesisTransaction.transactionId = "0"; //manually set the transaction id
 		genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); //manually add the Transactions Output
-		System.out.println("AAAAAA"+walletA.getBalance());
 		UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0)); //its important to store our first transaction in the UTXOs list.
-		System.out.println("AAAAAA"+walletA.getBalance());
 		System.out.println("Creating and Mining Genesis block... ");
 		Block genesis = new Block("0");
 		genesis.addTransaction(genesisTransaction);
-		System.out.println("AAAAAA"+walletA.getBalance());
 		addBlock(genesis);
 		
 		//testing

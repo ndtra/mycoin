@@ -36,7 +36,7 @@
 <div class="container">
 <div class="content-header row">
 	<div class="content-header-left col-md-6 col-xs-12 mb-1">
-		<h2 class="content-header-title">MYCOIN</h2>
+		<h2 class="content-header-title">Tạo ví mycoin</h2>
 	</div>
 </div>
 
@@ -44,9 +44,7 @@
 	<div class="col-xs-12">
 		<div class="input-group">
 			<button type="button" id="create">Tạo ví</button>
-			<button type="button" id="send">Gửi coin</button>
-			<button type="button" id="balance">Xem số dư</button>
-			<button type="button" id="history">Lịch sử giao dịch</button>
+			<button type="button" onclick="window.location.href = '<%=request.getContextPath()%>'">Return</button>
 		</div>
 	</div>
 </div>
@@ -54,68 +52,29 @@
 <div class="row">
 	<div class="col-xs-12">
 		<div class="input-group" id="result">
-		</div>
-	</div>
-</div>
-<br>
-<hr>
-<br>
-<div class="content-header row">
-	<div class="content-header-left col-md-6 col-xs-12 mb-1">
-		<h2 class="content-header-title">Lịch sử giao dịch</h2>
-	</div>
-</div>
-
-<div class="row">
-	<div class="col-xs-12">
-		<div class="input-group">
-			<table class="table table-striped" id="table">
-			  <thead>
-			    <tr>
-			      <th scope="col">Transaction Id</th>
-			      <th scope="col">Địa chỉ gửi</th>
-			      <th scope="col">Địa chỉ nhận</th>
-			      <th scope="col">Số coin gửi</th>
-			    </tr>
-			  </thead>
-			  <tbody id="tbody">
-			  </tbody>
-			</table>
+				
 		</div>
 	</div>
 </div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
-    $(function(){
-    	const ctx = "<%=request.getContextPath()%>";
-    	setInterval(getData, 3000);
-    	function getData(){
-    		$.ajax({
-        		url: ctx+"/"+'getData',
+    
+    $('#create').click(function(){
+    	var ctx = "<%=request.getContextPath()%>";
+        var input= $('#input').val();
+        $.ajax({
+    			url: ctx+"/setting",
     			type: 'POST',
     			processData: false,
-    			contentType: false
-            }).done(function(data) { 
-            	console.log(data);
-            	//$('#tbody').empty();
-            	if(data.length>0){
-            		for(i=0; i<data.length; i++){
-            			var line = '<th scope="row">'+data[i].transactionId+'</th>'+
-            			      '<td>'+data[i].sender+'</td>'+
-            			      '<td>'+data[i].reciepient+'</td>'+
-            			      '<td>'+data[i].value+'</td>';
-            			$('#tbody').append(line);
-            		}
-            	}
-            	else{
-            		$('#table').empty();
-            		//$('#table').append("Chưa có giao dịch nào.");
-            	}
-            	
-            });
-    	}
-    } )
+    			contentType: "application/json;charset=utf-8",
+    			success: function(res){
+    				if(res!=null){
+    	      			$("#result").append(res);
+    	      		}
+    			}
+    	});
+    })
 });
 
 </script>
