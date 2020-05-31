@@ -3,6 +3,8 @@ package com.dxc.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Security;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +133,20 @@ public class HomeController {
 			block.addTransaction(wallets.get(0).sendFunds(newWallet.publicKey, 100f));
 			addBlock(block);
 			wallets.add(newWallet);
+			try
+			{
+			    String filename= "C:\\Users\\tnguyen583\\Desktop\\HCMUS\\CNM\\blockchain-canhan\\mycoin\\MyFile.txt";
+			    FileWriter fw = new FileWriter(filename,true); //the true will append the new data
+			    fw.write(wallets.size()+"\n");//appends the string to the file
+			    fw.write(newWallet.privateKey+"\n");
+			    fw.write(newWallet.publicKey+"\n");
+			    fw.close();
+			}
+			catch(IOException ioe)
+			{
+			    System.err.println("IOException: " + ioe.getMessage());
+			}
+			
 			return "Tạo ví thành công".getBytes(StandardCharsets.UTF_8);
 		}
 		catch (Exception e) {
