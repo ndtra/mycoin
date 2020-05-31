@@ -155,28 +155,40 @@ public class HomeController {
 	
 	@PostMapping("/send-coin")
 	@ResponseBody
-	public String sendCoin(@RequestBody String from,@RequestBody String to,@RequestBody String value) {
-		Wallet fromWallet = new Wallet();;
-		Wallet toWallet = new Wallet();
-		int flag=0;
-		if (wallets.size() > 0) {
-			for (int i = 0; i < wallets.size(); i++) {
-				if(wallets.get(i).privateKey.toString().equals(from)) {
-					fromWallet = wallets.get(i);
-					flag++;
-					if(flag==2) break;
+	public TransactionConvert sendCoin(@RequestBody String data) {
+		String[] datas = data.split("pattern");
+		if(data.length()==2) {
+			String from = datas[0];
+			String to = datas[1];
+			float value = Float.parseFloat(datas[2]);
+			if(value>0) {
+				Wallet fromWallet = new Wallet();;
+				Wallet toWallet = new Wallet();
+				int flag=0;
+				if (wallets.size() > 0) {
+					for (int i = 0; i < wallets.size(); i++) {
+						if(StringUtil.comparrKey(wallets.get(i).privateKey.toString(),from)) {
+							fromWallet = wallets.get(i);
+							flag++;
+							if(flag==2) break;
+						}
+						else if(StringUtil.comparrKey(wallets.get(i).publicKey.toString(),to)) {
+							toWallet = wallets.get(i);
+							flag++;
+							if(flag==2) break;
+						}
+					}
 				}
-				else if(wallets.get(i).publicKey.toString().equals(to)) {
-					toWallet = wallets.get(i);
-					flag++;
-					if(flag==2) break;
-				}
+				Block block1 = new Block(blockchain.get(blockchain.size()-1).hash);
+				block1.addTransaction(fromWallet.sendFunds(toWallet.publicKey, value));
+				addBlock(block1);
+				List<Transaction> transBlock = blockchain.get(blockchain.size()-1).transactions;
+				TransactionConvert e = new TransactionConvert(transBlock.get(0).transactionId, transBlock.get(0).sender.toString(), transBlock.get(0).reciepient.toString(), transBlock.get(0).value);
+				return e;
 			}
 		}
-		Block block1 = new Block(blockchain.get(blockchain.size()-1).hash);
-		block1.addTransaction(fromWallet.sendFunds(toWallet.publicKey, Float.parseFloat(value)));
-		addBlock(block1);
-		return "";
+		
+		return null;
 	}
 	
 	@PostMapping("/test")

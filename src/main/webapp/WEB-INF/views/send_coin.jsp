@@ -33,8 +33,20 @@
 <br>
 <div class="row">
 	<div class="col-xs-12">
-		<div class="input-group" id="sendResult">
-			
+		<div class="input-group">
+			<table class="table table-striped" id="tableSendCoin" style="display: none;">
+			  <thead>
+			    <tr>
+			      <th scope="col">Transaction Id</th>
+			      <th scope="col">Sender</th>
+			      <th scope="col">Reciepient</th>
+			      <th scope="col">Value</th>
+			    </tr>
+			  </thead>
+			  <tbody id="tbodySendCoin">
+			  </tbody>
+			</table>
+			<label>Send coin failed</label>
 		</div>
 	</div>
 </div>

@@ -161,11 +161,21 @@ $(document).ready(function() {
     			type: 'POST',
     			processData: false,
     			contentType: "application/json;charset=utf-8",
-    			data: {from, to, value},
+    			data: from+'pattern'+to+'pattern'+value,
     			success: function(res){
-    				if(res!=null){
-    					$("#balance").val(res);
+    				if(res!=null && res!= ""){
+    					$("#tableSendCoin").attr("style","")
+    					$("#tbodySendCoin").empty();
+    					var line = '<tr><th scope="row">'+res.transactionId+'</th>'+
+				      			      '<td>'+res.sender+'</td>'+
+				      			      '<td>'+res.reciepient+'</td>'+
+				      			      '<td>'+res.value+'</td></tr>';
+    					$("#tbodySendCoin").append(line);
     	      		}
+    				else{
+    					$("#tableSendCoin").attr("style","display: none;");
+    					
+    				}
     			}
     	});
     });
