@@ -46,7 +46,7 @@
 			  <tbody id="tbodySendCoin">
 			  </tbody>
 			</table>
-			<label>Send coin failed</label>
+			<label id="sendFailed" style="display: none;">Send coin failed</label>
 		</div>
 	</div>
 </div>

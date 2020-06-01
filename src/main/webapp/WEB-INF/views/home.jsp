@@ -162,6 +162,7 @@ $(document).ready(function() {
     			success: function(res){
     				if(res!=null && res!= ""){
     					$("#tableSendCoin").attr("style","")
+    					$("#sendFailed").attr("style","display: none;");
     					$("#tbodySendCoin").empty();
     					var line = '<tr><th scope="row">'+res.transactionId+'</th>'+
 				      			      '<td>'+res.sender+'</td>'+
@@ -171,7 +172,7 @@ $(document).ready(function() {
     	      		}
     				else{
     					$("#tableSendCoin").attr("style","display: none;");
-    					
+    					$("#sendFailed").attr("style","");
     				}
     			}
     	});
