@@ -98,13 +98,11 @@ function showDetectModeration(id){
 }
 $(document).ready(function() {
     $(function(){
-    	let index=0;
+    	
     	const ctx = "<%=request.getContextPath()%>";
     	setInterval(getData, 3000);
     	function getData(){
-    		if($("#tbody").val() == ""){
-    			index = 0;
-    		}
+    		let index=$('#table tr').length-1;
     		$.ajax({
         		url: ctx+"/"+'getData',
     			type: 'POST',
@@ -121,7 +119,6 @@ $(document).ready(function() {
             			      '<td>'+data[i].value+'</td></tr>';
             			$('#tbody').append(line);
             		}
-            		index = data.length;
             	}
             	else{
             		$('#table').empty();
